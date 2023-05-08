@@ -1,4 +1,4 @@
-package com.mgmtp.talk.java19.benchmark;
+package com.mgmtp.talk.virtualthreads.benchmark;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;

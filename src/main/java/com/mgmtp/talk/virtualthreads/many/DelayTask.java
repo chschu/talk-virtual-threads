@@ -1,4 +1,4 @@
-package com.mgmtp.talk.java19.many;
+package com.mgmtp.talk.virtualthreads.many;
 
 import java.util.concurrent.Callable;
 

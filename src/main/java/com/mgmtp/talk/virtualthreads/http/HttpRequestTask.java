@@ -1,4 +1,4 @@
-package com.mgmtp.talk.java19.http;
+package com.mgmtp.talk.virtualthreads.http;
 
 import java.io.IOException;
 import java.io.InputStream;

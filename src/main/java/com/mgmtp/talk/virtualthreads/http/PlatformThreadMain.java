@@ -1,4 +1,4 @@
-package com.mgmtp.talk.java19.http;
+package com.mgmtp.talk.virtualthreads.http;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
