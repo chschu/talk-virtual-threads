@@ -11,7 +11,7 @@ public class VirtualThreadMain {
 		final Stopwatch stopwatch = Stopwatch.createStarted();
 		try (final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
 			for (int i = 0; i < 24; i++) {
-				executorService.submit(HttpRequestTask.INSTANCE);
+				executorService.submit(HttpRequestTask.DEFAULT);
 			}
 		}
 		System.out.println(stopwatch.elapsed().toMillis() + " ms");

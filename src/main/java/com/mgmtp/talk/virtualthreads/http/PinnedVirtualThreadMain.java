@@ -5,13 +5,13 @@ import java.util.concurrent.Executors;
 
 import com.google.common.base.Stopwatch;
 
-public class PlatformThreadMain {
+public class PinnedVirtualThreadMain {
 
 	public static void main(final String[] args) {
 		final Stopwatch stopwatch = Stopwatch.createStarted();
-		try (final ExecutorService executorService = Executors.newFixedThreadPool(8)) {
+		try (final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor()) {
 			for (int i = 0; i < 24; i++) {
-				executorService.submit(HttpRequestTask.DEFAULT);
+				executorService.submit(HttpRequestTask.PINNED);
 			}
 		}
 		System.out.println(stopwatch.elapsed().toMillis() + " ms");

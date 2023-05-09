@@ -11,7 +11,13 @@ import javax.net.ssl.HttpsURLConnection;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public enum HttpRequestTask implements Callable<Void> {
-	INSTANCE;
+	DEFAULT(false), PINNED(true);
+
+	private final boolean pinned;
+
+	HttpRequestTask(final boolean pinned) {
+		this.pinned = pinned;
+	}
 
 	@Override
 	public Void call() throws IOException {
@@ -20,13 +26,23 @@ public enum HttpRequestTask implements Callable<Void> {
 		final URL url = URI.create("https://deelay.dev.dnup.de/9000/https://example.org/").toURL();
 		final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 		connection.setRequestMethod("GET");
-		try (final InputStream inputStream = connection.getInputStream()) {
-			inputStream.readAllBytes();
+		if (pinned) {
+			synchronized (new Object()) {
+				readResponse(connection);
+			}
+		} else {
+			readResponse(connection);
 		}
 
 		// ~1 second of CPU-bound operation (on my machine - adjust as needed)
 		BCrypt.hashpw("123456", BCrypt.gensalt(13));
 
 		return null;
+	}
+
+	private static void readResponse(HttpsURLConnection connection) throws IOException {
+		try (final InputStream inputStream = connection.getInputStream()) {
+			inputStream.readAllBytes();
+		}
 	}
 }
