@@ -35,7 +35,7 @@ public enum HttpRequestTask implements Callable<Void> {
 		}
 
 		// ~1 second of CPU-bound operation (on my machine - adjust as needed)
-		BCrypt.hashpw("123456", BCrypt.gensalt(13));
+		BCrypt.hashpw("123456", BCrypt.gensalt(12));
 
 		return null;
 	}
