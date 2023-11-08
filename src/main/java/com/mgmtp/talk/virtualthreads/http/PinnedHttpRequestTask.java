@@ -10,7 +10,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-public enum HttpRequestTask implements Callable<Void> {
+public enum PinnedHttpRequestTask implements Callable<Void> {
 	INSTANCE;
 
 	@Override
@@ -20,7 +20,9 @@ public enum HttpRequestTask implements Callable<Void> {
 		final URL url = URI.create("https://deelay.dev.dnup.de/9000/https://example.org/").toURL();
 		final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 		connection.setRequestMethod("GET");
-		readResponse(connection);
+		synchronized (new Object()) {
+			readResponse(connection);
+		}
 
 		// ~1 second of CPU-bound operation (on my machine - adjust as needed)
 		BCrypt.hashpw("123456", BCrypt.gensalt(12));
