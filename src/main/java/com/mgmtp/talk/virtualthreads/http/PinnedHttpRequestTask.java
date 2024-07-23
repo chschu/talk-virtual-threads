@@ -2,6 +2,8 @@ package com.mgmtp.talk.virtualthreads.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.net.URI;
 import java.net.URL;
 import java.util.concurrent.Callable;
@@ -10,8 +12,13 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-public enum PinnedHttpRequestTask implements Callable<Void> {
-	INSTANCE;
+public class PinnedHttpRequestTask implements Callable<Void> {
+
+	private CpuBoundDelay cpuBoundDelay;
+
+	public PinnedHttpRequestTask(final CpuBoundDelay cpuBoundDelay) {
+		this.cpuBoundDelay = cpuBoundDelay;
+	}
 
 	@Override
 	public Void call() throws IOException {
@@ -24,13 +31,13 @@ public enum PinnedHttpRequestTask implements Callable<Void> {
 			readResponse(connection);
 		}
 
-		// ~1 second of CPU-bound operation (on my machine - adjust as needed)
-		BCrypt.hashpw("123456", BCrypt.gensalt(12));
+		// ~1 second of CPU-bound operation
+		cpuBoundDelay.delaySeconds(1);
 
 		return null;
 	}
 
-	private static void readResponse(HttpsURLConnection connection) throws IOException {
+	private static void readResponse(final HttpsURLConnection connection) throws IOException {
 		try (final InputStream inputStream = connection.getInputStream()) {
 			inputStream.readAllBytes();
 		}

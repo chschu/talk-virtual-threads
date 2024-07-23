@@ -10,8 +10,13 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-public enum HttpRequestTask implements Callable<Void> {
-	INSTANCE;
+public class HttpRequestTask implements Callable<Void> {
+
+	private final CpuBoundDelay cpuBoundDelay;
+
+	public HttpRequestTask(final CpuBoundDelay cpuBoundDelay) {
+		this.cpuBoundDelay = cpuBoundDelay;
+	}
 
 	@Override
 	public Void call() throws IOException {
@@ -22,13 +27,13 @@ public enum HttpRequestTask implements Callable<Void> {
 		connection.setRequestMethod("GET");
 		readResponse(connection);
 
-		// ~1 second of CPU-bound operation (on my machine - adjust as needed)
-		BCrypt.hashpw("123456", BCrypt.gensalt(12));
+		// ~1 second of CPU-bound operation
+		cpuBoundDelay.delaySeconds(1);
 
 		return null;
 	}
 
-	private static void readResponse(HttpsURLConnection connection) throws IOException {
+	private static void readResponse(final HttpsURLConnection connection) throws IOException {
 		try (final InputStream inputStream = connection.getInputStream()) {
 			inputStream.readAllBytes();
 		}
