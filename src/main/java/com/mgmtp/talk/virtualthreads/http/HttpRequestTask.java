@@ -8,8 +8,6 @@ import java.util.concurrent.Callable;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
-
 public class HttpRequestTask implements Callable<Void> {
 
 	private final CpuBoundDelay cpuBoundDelay;
